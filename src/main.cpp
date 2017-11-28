@@ -58,13 +58,26 @@ void loop() {
 
           Dynamixel.moveSpeed(item_id, position, speed);
 
+          glavna_serial.write(1);
+
         } else if(function_id == 'l') {
           if(value1 == 1) {
             Dynamixel.ledStatus(item_id, true);
           } else {
             Dynamixel.ledStatus(item_id, false);
           }
+
+          glavna_serial.write(1);
+        } else if(function_id == 'M'){
+            int moving;
+            moving = Dynamixel.moving(item_id);
+
+            glavna_serial.write(1);
+
+            glavna_serial.write((unsigned char)moving);
+
         }
+
       }
     } else {
 
@@ -77,7 +90,6 @@ void loop() {
 
     }
 
-    glavna_serial.write(1);
     buffer_read = false;
   }
 }
