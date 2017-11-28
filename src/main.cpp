@@ -16,7 +16,7 @@ char tool_id; int item_id; char function_id; unsigned char value1; unsigned char
 
 SoftwareSerial glavna_serial(SSerial_RX, SSerial_TX);
 
-bool debug = true;
+bool debug = false;
 
 void setupz() {
 
@@ -57,8 +57,13 @@ void loop() {
           int speed    = (int) 1024 / (255 / value2);
 
           Dynamixel.moveSpeed(item_id, position, speed);
-          
-          glavna_serial.write(1);
+
+        } else if(function_id == 'l') {
+          if(value1 == 1) {
+            Dynamixel.ledStatus(item_id, true);
+          } else {
+            Dynamixel.ledStatus(item_id, false);
+          }
         }
       }
     } else {
@@ -72,6 +77,7 @@ void loop() {
 
     }
 
+    glavna_serial.write(1);
     buffer_read = false;
   }
 }
