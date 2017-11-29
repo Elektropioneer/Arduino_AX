@@ -68,7 +68,7 @@ void loop() {
           }
 
           glavna_serial.write(1);
-        } else if(function_id == 'M'){
+        } else if(function_id == 'M') {
             int moving;
             moving = Dynamixel.moving(item_id);
 
@@ -76,9 +76,19 @@ void loop() {
 
             glavna_serial.write((unsigned char)moving);
 
+        } else if (function_id == 'p') {
+          int position, calculated_pos;
+          position = Dynamixel.readPosition(item_id);
+
+          glavna_serial.write(1);
+
+          calculated_pos = ((255 / (1024 / position)) * 300) / 255;
+
+          glavna_serial.write((unsigned char)calculated_pos);
         }
 
       }
+
     } else {
 
       int position = (int) 1024 / (255 / value1);
