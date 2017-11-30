@@ -12,7 +12,7 @@
 char buffer[8];                   // buffer length
 bool buffer_read = false;
 
-char tool_id; int item_id; char function_id; unsigned char value1; unsigned char value2;
+char tool_id; int item_id; char function_id; unsigned char value1; unsigned char value2; unsigned char value3;
 
 SoftwareSerial glavna_serial(SSerial_RX, SSerial_TX);
 
@@ -32,6 +32,8 @@ void setupz() {
 
 void setup() {
   setupz();
+
+
 }
 
 
@@ -49,8 +51,9 @@ void loop() {
     function_id = buffer[2];
     value1      = buffer[3];
     value2      = buffer[4];
+    value3      = buffer[5];
 // Print the gotten buffers if debuging
-    if(debug) { Serial.println(tool_id); Serial.println(item_id); Serial.println(function_id); Serial.println(value1); Serial.println(value2); Serial.println("-----------------------"); }
+    if(debug) { Serial.println(tool_id); Serial.println(item_id); Serial.println(function_id); Serial.println(value1); Serial.println(value2); Serial.println(value3); Serial.println("-----------------------"); }
 // If not run servos
     if(!debug) {
       if(tool_id == 'a') {                                //If Dynamixel is Initialized
@@ -79,6 +82,17 @@ void loop() {
             glavna_serial.write((unsigned char)moving);  // return movement status to "glavna"
 
 
+        } else if(function_id == 's') {                  //sync write for arm
+            int position4 = (int) 1024 / (255 / value1);
+            int position2 = (int) 1024 / (255 / value2);
+            int position10 = (int) 1024 / (255 / value3);
+
+
+            Dynamixel.move(4, position4);
+            Dynamixel.move(2, position2);
+            Dynamixel.move(10, position10);
+
+            glavna_serial.write(1);
         }
 
       }
@@ -86,11 +100,14 @@ void loop() {
     } else {
 /* print position and speed goten from "glavna" if debug is Initialized */
 
-      int position = (int) 1024 / (255 / value1);
-      int speed    = (int) 1024 / (255 / value2);
+      int position4 = (int) 1024 / (255 / value1);
+      int position2 = (int) 1024 / (255 / value2);
+      int position10 = (int) 1024 / (255 / value3);
 
-      Serial.println(position);
-      Serial.println(speed);
+      Serial.println("from here");
+      Serial.println(position4);
+      Serial.println(position2);
+      Serial.println(position10);
       Serial.println("-----------------------");
 
     }
