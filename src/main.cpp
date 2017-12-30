@@ -2,7 +2,7 @@
 #include <DynamixelSerial.h>
 #include <SoftwareSerial.h>
 
-#define DIRECTION_PIN     2
+#define DIRECTION_PIN     8
 #define SSerial_RX        10
 #define SSerial_TX        11
 #define Serial_Baud       9600
